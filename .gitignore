@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data directory
+data/
+
+# Model weights (can be re-generated with python main.py)
+# outputs/*.pth
+
+# OS generated files
+.DS_Store
+Thumbs.db
