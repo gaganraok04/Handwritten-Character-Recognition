@@ -115,3 +115,4 @@ def analyze_worst_errors(model_path=None, output_dir=None, top_k=20):
     print(f"Error analysis markdown report saved to {report_save_path}")
 
     return worst_20
+

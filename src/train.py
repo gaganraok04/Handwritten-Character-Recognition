@@ -167,3 +167,4 @@ def plot_curves(histories, save_path):
     plt.savefig(save_path, dpi=300)
     plt.close()
     print(f"Training curves successfully saved to {save_path}")
+

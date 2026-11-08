@@ -49,3 +49,4 @@ def predict_single(test_index=0):
 if __name__ == '__main__':
     idx = int(sys.argv[1]) if len(sys.argv) > 1 else 0
     predict_single(idx)
+

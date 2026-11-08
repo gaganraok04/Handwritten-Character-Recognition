@@ -88,9 +88,106 @@ Outputs generated in `outputs/`:
 - `error_analysis.md` (Detailed tabular breakdown of failure reasons)
 - `benchmark_summary.txt` (Ablation and performance table)
 
-### 3. Test on an Individual Sample
+### 3. Test on an Individual MNIST Sample
 ```bash
-# Test sample index #42 from the test set
+# Test sample index #42 from the MNIST test set
 python predict_sample.py 42
 ```
 Outputs the actual digit, predicted digit, model confidence, and an ASCII probability bar chart.
+
+---
+
+## 🌟 EMNIST ByClass Upgrade (Full 62-Class Recognition)
+
+To support full alphanumeric recognition beyond digits, the project was upgraded to the **EMNIST ByClass** benchmark (62 classes).
+
+### Class Mapping (62 Classes)
+- **Indices 0–9:** Digits `'0'` to `'9'`
+- **Indices 10–35:** Uppercase letters `'A'` to `'Z'`
+- **Indices 36–61:** Lowercase letters `'a'` to `'z'`
+
+### EMNIST Performance Summary
+- **Model:** `DeepCNN(num_classes=62)` (saved as `outputs/EMNIST_DeepCNN.pth`)
+- **Overall Test Accuracy:** **83.32%** on official EMNIST test split
+- **Macro Precision:** 69.33%
+- **Macro Recall:** 65.22%
+- **Macro F1-Score:** 64.45%
+- **Orientation Handling:** NIST raw images have swapped row/column axes; corrected using `transpose(Image.Transpose.TRANSPOSE)` in the data pipeline.
+
+> **Viva Insight on Case Ambiguity:**
+> In handwritten text, glyphs like `C` vs `c`, `O` vs `o`, `S` vs `s`, `V` vs `v`, `W` vs `w`, `X` vs `x`, and `Z` vs `z` have virtually identical morphology when presented as isolated 28x28 crops without relative baseline/cap-height scale. The model typically predicts the uppercase variant. This is why EMNIST provides both ByClass (62 classes) and ByMerge (47 classes).
+
+### How to Run EMNIST Training & Predictions
+1. **Train EMNIST Model:**
+   ```bash
+   python train_emnist.py
+   ```
+2. **Predict on Any Custom Image (JPG/PNG/BMP):**
+   ```bash
+   # Predict on any handwritten image
+   python predict_image.py path/to/your_drawing.png
+   ```
+
+---
+
+## 🖥️ Professional Desktop GUI Application (`desktop_gui.py`)
+
+A modern desktop application built with **PySide6 (Qt)** and **PyTorch**, featuring a warm editorial palette (`#F0EFEC`, `#FFFFFF`, `#DED8CF`, `#B9AA98`, `#897765`, `#39342F`) and dedicated mouse-driven drawing.
+
+### 🎨 Key Features:
+1. **Dedicated Mouse Drawing Canvas:**
+   - **Pure Mouse Input:** Left-click to start, drag to draw smooth anti-aliased strokes, release to finish.
+   - 360×360 canvas with crisp warm border (`#DDD7CF`) on pure white (`#FFFFFF`).
+2. **Interactive Controls:**
+   - **Undo (`Ctrl+Z`) & Redo (`Ctrl+Y`)** stack management.
+   - **Adjustable Pen Thickness:** Clean slider from 6 px to 36 px.
+   - **Clear Canvas (`Escape` or `Ctrl+Delete`)** with instant reset.
+   - **Export Drawing (`Ctrl+S`):** Save high-res drawing as PNG.
+3. **Multiple Handwritten Character Recognition & OpenCV Segmentation:**
+   - Recognizes words (`HELLO`), multiple letters (`AB`, `ABC`), digits (`123`), and mixed sequences (`A1B`).
+   - Connected component analysis with stroke grouping (handles dots on 'i'/'j' and crossbars).
+   - Vertical projection profiling to split touching cursive characters.
+   - Automatic left-to-right sorting and aspect-ratio preserving centering to 28×28 EMNIST tensors.
+4. **Dual Recognition Workflow:**
+   - **Recognize Text (`Enter` / `Return`):** Primary brown button (`#897765`). Automatically segments multiple characters and outputs combined string, confidence, and character breakdown.
+   - **Recognize Single (`Shift+Enter`):** Dedicated button for single character classification with Top-5 candidate probabilities.
+5. **Real-Time Visual Feedback:**
+   - Dynamic hero card showing recognized string (with dynamic auto-scaled typography).
+   - Processed preview box displaying either 28×28 CNN input or segmented canvas with numbered bounding boxes.
+   - Character breakdown with progress bars and classification categories.
+6. **Session Recognition History:**
+   - Clean data table logging recent drawings with thumbnails, predicted text/characters, categories, confidence scores, and timestamps.
+7. **Non-Blocking Architecture:**
+   - Model loaded once at startup. Inference runs asynchronously in Qt background worker threads (`SequenceInferenceWorker`, `InferenceWorker`) to guarantee zero UI stuttering.
+
+### 🚀 How to Run the Desktop GUI:
+```bash
+python desktop_gui.py
+```
+
+### ⌨️ Keyboard Shortcuts:
+| Action | Shortcut |
+|---|---|
+| **Recognize Text (Sequence)** | `Enter` / `Return` |
+| **Recognize Single Character** | `Shift+Enter` |
+| **Clear Canvas** | `Escape` or `Ctrl+Delete` |
+| **Undo Stroke** | `Ctrl+Z` |
+| **Redo Stroke** | `Ctrl+Y` or `Ctrl+Shift+Z` |
+| **Save Drawing** | `Ctrl+S` |
+
+### 🧪 Automated Testing:
+```bash
+# Run full GUI test suite (8 tests)
+python test_gui.py
+
+# Run multi-character sequence validation (AB, ABC, 123, A1B, HELLO)
+python test_multi_character.py
+```
+
+### 📦 Packaging as Windows Executable (.exe) with PyInstaller:
+To bundle the application into a standalone Windows `.exe`:
+```bash
+pip install pyinstaller
+pyinstaller --name="HandwritingAI" --windowed --add-data="outputs/EMNIST_DeepCNN.pth;outputs" --icon=NONE desktop_gui.py
+```
+The resulting executable will be placed in the `dist/HandwritingAI/` folder.

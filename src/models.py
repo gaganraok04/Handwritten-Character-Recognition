@@ -8,15 +8,15 @@ class SimpleCNN(nn.Module):
     - 1 Convolutional layer (16 filters, 3x3 kernel)
     - ReLU Activation
     - 2x2 Max Pooling
-    - 1 Fully Connected layer mapping to 10 classes
-    Total parameters are kept minimal to establish a neural baseline.
+    - 1 Fully Connected layer mapping to num_classes (default: 10 for MNIST, 62 for EMNIST ByClass)
     """
-    def __init__(self):
+    def __init__(self, num_classes=10):
         super(SimpleCNN, self).__init__()
+        self.num_classes = num_classes
         # Input: 1 x 28 x 28
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=0) # -> 16 x 26 x 26
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)                                # -> 16 x 13 x 13
-        self.fc = nn.Linear(16 * 13 * 13, 10)
+        self.fc = nn.Linear(16 * 13 * 13, num_classes)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -31,11 +31,11 @@ class DeepCNN(nn.Module):
     - Block 1: Conv2D(32, 3x3) + BatchNorm + ReLU + MaxPool(2x2)
     - Block 2: Conv2D(64, 3x3) + BatchNorm + ReLU + MaxPool(2x2) + Dropout(0.25)
     - Dense Block: Linear(64*7*7 -> 128) + ReLU + Dropout(0.5)
-    - Output: Linear(128 -> 10)
-    Designed to prevent overfitting and capture richer hierarchical stroke patterns.
+    - Output: Linear(128 -> num_classes) (default: 10 for MNIST, 62 for EMNIST ByClass)
     """
-    def __init__(self):
+    def __init__(self, num_classes=10):
         super(DeepCNN, self).__init__()
+        self.num_classes = num_classes
         # Block 1: 1 x 28 x 28 -> 32 x 28 x 28 -> 32 x 14 x 14
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm2d(32)
@@ -50,7 +50,7 @@ class DeepCNN(nn.Module):
         # Dense
         self.fc1 = nn.Linear(64 * 7 * 7, 128)
         self.dropout2 = nn.Dropout(0.5)
-        self.fc2 = nn.Linear(128, 10)
+        self.fc2 = nn.Linear(128, num_classes)
 
     def forward(self, x):
         x = self.pool(F.relu(self.bn1(self.conv1(x))))
