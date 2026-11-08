@@ -48,7 +48,7 @@ class HandwritingAIApp(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("HANDWRITING AI — Character Recognition Studio")
+        self.setWindowTitle("HANDWRITING AI — Intelligent Character Recognition & Segmentation")
         self.resize(1060, 810)
         self.setMinimumSize(990, 750)
 
@@ -106,7 +106,7 @@ class HandwritingAIApp(QMainWindow):
         app_title = QLabel("HANDWRITING AI")
         app_title.setObjectName("AppTitle")
 
-        app_subtitle = QLabel("Intelligent handwritten character recognition engine")
+        app_subtitle = QLabel("Intelligent Character Recognition & Segmentation System Using Deep CNN and OpenCV")
         app_subtitle.setObjectName("AppSubtitle")
 
         title_vbox.addWidget(app_title)

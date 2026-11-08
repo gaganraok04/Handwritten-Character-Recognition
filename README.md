@@ -1,6 +1,6 @@
-# Handwritten Character Recognition (MNIST) with CNNs
+# Handwriting AI: Intelligent Character Recognition & Segmentation System Using Deep CNN and OpenCV
 
-An end-to-end Machine Learning and Deep Learning pipeline that classifies handwritten digits (0–9) using Convolutional Neural Networks (CNNs).
+An end-to-end Machine Learning, Deep Learning, and Computer Vision desktop application that recognizes handwritten digits, letters, and multi-character text sequences (62 classes) using PyTorch Convolutional Neural Networks (CNNs) and OpenCV segmentation.
 
 This project strictly adheres to an **empirical engineering approach**:
 1. Starting from a fast **non-neural baseline** (Logistic Regression).
