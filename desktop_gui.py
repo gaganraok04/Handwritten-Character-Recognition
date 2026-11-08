@@ -49,8 +49,8 @@ class HandwritingAIApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("HANDWRITING AI — Intelligent Character Recognition & Segmentation")
-        self.resize(1060, 810)
-        self.setMinimumSize(990, 750)
+        self.resize(1080, 830)
+        self.setMinimumSize(1020, 770)
 
         # Initialize Model Manager
         self.model_manager = None
@@ -172,7 +172,7 @@ class HandwritingAIApp(QMainWindow):
         hdr_layout.addWidget(instruction)
         layout.addLayout(hdr_layout)
 
-        # Drawing Canvas Box (Centered)
+        # Drawing Canvas Box (Centered with enlarged 380x380 drawing area)
         canvas_center_box = QHBoxLayout()
         canvas_center_box.addStretch()
 
@@ -181,7 +181,7 @@ class HandwritingAIApp(QMainWindow):
         c_layout = QVBoxLayout(self.canvas_container)
         c_layout.setContentsMargins(1, 1, 1, 1)
 
-        self.canvas = DrawingCanvas(self, canvas_size=360)
+        self.canvas = DrawingCanvas(self, canvas_size=380)
         self.canvas.can_undo_changed.connect(self.on_undo_status)
         self.canvas.can_redo_changed.connect(self.on_redo_status)
         c_layout.addWidget(self.canvas)
@@ -441,7 +441,7 @@ class HandwritingAIApp(QMainWindow):
         h_row.addWidget(self.clear_hist_btn)
         layout.addLayout(h_row)
 
-        # Compact History Table (92px height)
+        # Compact History Table (105px height for clean multi-row visibility)
         self.history_table = QTableWidget(0, 6)
         self.history_table.setHorizontalHeaderLabels([
             "#", "Preview", "Predicted", "Category", "Confidence", "Timestamp"
@@ -450,8 +450,8 @@ class HandwritingAIApp(QMainWindow):
         self.history_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         self.history_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         self.history_table.verticalHeader().setVisible(False)
-        self.history_table.setFixedHeight(92)
-        self.history_table.setIconSize(QSize(22, 22))
+        self.history_table.setFixedHeight(105)
+        self.history_table.setIconSize(QSize(24, 24))
 
         layout.addWidget(self.history_table)
         return card
@@ -750,11 +750,13 @@ class HandwritingAIApp(QMainWindow):
         item_idx.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         self.history_table.setItem(row_idx, 0, item_idx)
 
-        # Thumbnail
+        # Thumbnail (supports both 28x28 crops and sequence previews)
         if preview_pil is not None:
             img_rgba = preview_pil.convert('RGBA')
-            qimg = QImage(img_rgba.tobytes(), 28, 28, QImage.Format.Format_RGBA8888)
-            icon = QIcon(QPixmap.fromImage(qimg))
+            pw, ph = preview_pil.size
+            qimg = QImage(img_rgba.tobytes(), pw, ph, pw * 4, QImage.Format.Format_RGBA8888)
+            pix = QPixmap.fromImage(qimg).scaled(24, 24, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            icon = QIcon(pix)
             thumb_item = QTableWidgetItem(icon, "")
             thumb_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             self.history_table.setItem(row_idx, 1, thumb_item)
