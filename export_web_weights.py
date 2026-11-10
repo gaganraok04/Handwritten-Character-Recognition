@@ -76,3 +76,4 @@ with open(bin_path, 'wb') as f:
 
 print(f"EMNIST DeepCNN binary written to {bin_path} (size: {os.path.getsize(bin_path) / (1024*1024):.2f} MB)")
 print("Export completed successfully!")
+
