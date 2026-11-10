@@ -298,16 +298,18 @@
             margin-bottom: 0.85rem;
         }
 
-        .canvas-toolbar select {
-            background: var(--bg-primary);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
+        .engine-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.65rem;
+            background: var(--badge-bg);
+            border: 1px solid var(--badge-border);
             border-radius: var(--radius-sm);
-            padding: 0.4rem 0.6rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            outline: none;
-            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: -0.01em;
         }
 
         .canvas-container {
@@ -872,11 +874,8 @@
                 <!-- Left: Canvas -->
                 <div class="canvas-card">
                     <div class="canvas-toolbar">
-                        <select id="modelSelector">
-                            <option value="mnist">MNIST Digits (0–9) [99.03% Acc]</option>
-                            <option value="emnist">EMNIST 62-Class (0-9, A-Z, a-z)</option>
-                        </select>
-                        <span id="modelStatus" style="font-size:0.75rem; color:var(--accent-green); font-weight:600;">● Engine Ready</span>
+                        <span class="engine-badge">⚡ EMNIST 62-Class (0–9, A–Z, a–z)</span>
+                        <span id="modelStatus" style="font-size:0.75rem; color:var(--accent-cyan); font-weight:600;">● Engine Ready</span>
                     </div>
 
                     <div class="canvas-container">
@@ -1166,7 +1165,6 @@
         const topConf = document.getElementById('topConf');
         const topLatency = document.getElementById('topLatency');
         const candidateList = document.getElementById('candidateList');
-        const modelSelector = document.getElementById('modelSelector');
         const modelStatus = document.getElementById('modelStatus');
 
         let isDrawing = false;
@@ -1348,12 +1346,11 @@
             const finalImgData = ctx28.getImageData(0, 0, 28, 28);
             previewCtx.putImageData(finalImgData, 0, 0);
 
-            // Standardize into Float32Array
+            // Standardize into Float32Array (EMNIST 62-class parameters)
             const finalPx = finalImgData.data;
             const floatArray = new Float32Array(28 * 28);
-            const isEMNIST = modelSelector.value === 'emnist';
-            const mean = isEMNIST ? 0.1751 : 0.1307;
-            const std = isEMNIST ? 0.3332 : 0.3081;
+            const mean = 0.1751;
+            const std = 0.3332;
 
             for (let i = 0; i < 28 * 28; i++) {
                 const val = finalPx[i * 4];
@@ -1378,16 +1375,11 @@
             }
 
             try {
-                const modelType = modelSelector.value;
                 let res;
-                if (modelType === 'mnist') {
-                    res = engine.predictSimpleCNN(tensor);
-                } else {
-                    if (!engine.emnistReady) {
-                        topConf.innerText = 'Loading EMNIST weights...';
-                        return;
-                    }
+                if (engine.emnistReady) {
                     res = engine.predictDeepCNN(tensor);
+                } else {
+                    res = engine.predictSimpleCNN(tensor);
                 }
 
                 topChar.innerText = res.predicted;
@@ -1418,11 +1410,6 @@
                 }
             }
         }
-
-        // Model Selector Change
-        modelSelector.addEventListener('change', () => {
-            runInference();
-        });
 
         // Presets
         document.querySelectorAll('.btn-preset[data-preset]').forEach(btn => {
