@@ -3,13 +3,59 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Data directory
-data/
+# PyInstaller / Build artifacts
+dist/
+build/
+*.spec
 
-# Model weights (can be re-generated with python main.py)
-# outputs/*.pth
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Data directory (raw downloads)
+data/
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
+# Media, video and audio generation artifacts (exclude demo and LinkedIn videos from repo)
+*.mp4
+*.avi
+*.mov
+*.wav
+*.mp3
+outputs/*.mp4
+outputs/*.srt
+outputs/*.md
+outputs/video_final_build/
+outputs/linkedin_build/
+outputs/linkedin_build_final/
+outputs/linkedin_approved_build/
+outputs/linkedin_audio/
+outputs/linkedin_verification/
+outputs/verified_approved_frames/
+outputs/verified_final_frames/
+outputs/verified_slides/
+outputs/debug_*
+outputs/test_*
+outputs/slice_*
+outputs/crop_*
+outputs/demo_frames/
+outputs/*reference.jpg
+outputs/*thumbnail*.png
+outputs/*large.png
+outputs/emnist_confusion_matrix_readable.png
+
+# Video generation helper scripts
+build_*.py
+record_gui_screen.py
+inspect_gui_timeline.py
+find_exact_milestones.py
+verify_*.py
+generate_gui_demo_frames.py
+test_scene*.py
+test_slide_layout.py
+test_new_scenes.py
+create_enhanced_eval_assets.py
