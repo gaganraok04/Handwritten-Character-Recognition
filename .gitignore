@@ -48,9 +48,10 @@ outputs/*thumbnail*.png
 outputs/*large.png
 outputs/emnist_confusion_matrix_readable.png
 
-# Video generation helper scripts
+# Video and screenshot generation helper scripts
 build_*.py
 record_gui_screen.py
+capture_live_screenshots.py
 inspect_gui_timeline.py
 find_exact_milestones.py
 verify_*.py

@@ -53,10 +53,17 @@ The system performs real-time classification across **62 alphanumeric classes** 
 
 ---
 
-## 🖥️ Application Preview
+## 🖥️ Live Application Demonstrations
 
-![Desktop GUI Screenshot](outputs/desktop_gui_screenshot.png)
-*Figure 1: Real-time PySide6 desktop interface demonstrating genuine multi-character OpenCV segmentation and 62-class EMNIST DeepCNN inference.*
+| **Multi-Character Recognition & OpenCV Segmentation (`ABC`)** |
+|:---:|
+| ![Multi-Character Segmentation](outputs/desktop_gui_screenshot.png) |
+| *Figure 1: Live desktop GUI executing automatic contour-based OpenCV segmentation and recognizing multi-character sequence `ABC` with bounding boxes and session history tracking.* |
+
+| **Single-Character Recognition (`A` — 92.10% Confidence)** |
+|:---:|
+| ![Single-Character Classification](outputs/desktop_gui_single_char.png) |
+| *Figure 2: Real-time single-character inference showing predicted uppercase glyph `'A'`, 92.10% confidence score, sub-3ms latency, and full Top-5 candidate probability distribution.* |
 
 ---
 
